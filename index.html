@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rak Mhoo Auan 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Itim&family=Anuphan:wght@300;400;600&display=swap');
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Anuphan', sans-serif;
+      background: linear-gradient(135deg, #ff979b, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .card {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(6px);
+      border-radius: 28px;
+      padding: 26px 22px;
+      text-align: center;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 25px 50px rgba(255,94,120,0.35);
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      font-family: 'Itim', cursive;
+      color: #ff5e78;
+      margin: 6px 0 10px;
+      font-size: 26px;
+    }
+    p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    /* Name animation */
+    .love-name {
+      font-family: 'Itim', cursive;
+      font-size: 24px;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #ff5e78, #ffc3d0, #ff5e78);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 2.5s linear infinite;
+    }
+    @keyframes shine {
+      to { background-position: -200% center; }
+    }
+
+    .envelope {
+      font-size: 88px;
+      cursor: pointer;
+      animation: float 2.2s ease-in-out infinite;
+      margin-top: 10px;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .hidden { display: none; }
+
+    .heart {
+      font-size: 48px;
+      cursor: pointer;
+      margin: 10px;
+      animation: pop 0.45s cubic-bezier(.17,.89,.32,1.49);
+    }
+    @keyframes pop {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    img {
+      width: 100%;
+      border-radius: 18px;
+      margin-top: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    audio { width: 100%; margin-top: 12px; }
+
+    .float {
+      position: fixed;
+      top: -10px;
+      animation: fall linear forwards;
+      z-index: 1;
+      opacity: 0.85;
+    }
+    @keyframes fall { to { transform: translateY(110vh); opacity: 0; } }
+
+    .firework {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: explode 1.2s ease-out forwards;
+      z-index: 3;
+    }
+    @keyframes explode { to { transform: scale(7); opacity: 0; } }
+
+    input {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #ffd1da;
+      width: 85%;
+      margin-top: 12px;
+      font-size: 15px;
+      font-family: 'Anuphan', sans-serif;
+    }
+    button {
+      margin-top: 14px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ff5e78, #ff9a9e);
+      color: white;
+      font-size: 16px;
+      font-family: 'Itim', cursive;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255,94,120,0.45);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    button:active {
+      transform: scale(0.95);
+      box-shadow: 0 4px 10px rgba(255,94,120,0.35);
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- STEP 0 PASSWORD -->
+  <div id="step0">
+    <h1>🔐 Birth Day Password</h1>
+    <p>รหัสพิเศษคือวันเกิดของเธอ</p>
+    <input id="password" placeholder="ใส่วันเกิดเลยย XX/XX/XXXX" />
+    <br />
+    <button onclick="checkPassword()">เปิดจดหมาย</button>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step1" class="hidden">
+    <h1>Kao Rak Auan</h1>
+    <p><span class="love-name" id="name"></span> 💖</p>
+    <p>เค้าเจอเธอตั้งแต่ <strong id="date"></strong></p>
+    <p>แตะที่จดหมายเร้วอ้วนน มีอะไรจะบอกก</p>
+    <div class="envelope" onclick="openEnvelope()">💌</div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="hidden">
+    <h1>กดจุ้บให้ครบก่อนน 🎀</h1>
+    <p id="counter">0 / 16</p>
+    <div id="hearts"></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step3" class="hidden">
+    <h1><span class="love-name" id="name2"></span> 💕</h1>
+    <p>
+      เค้าดีใจมากมากที่ได้เจออ้วน ถึงเค้ากับอ้วนจะทะเลาะกันบ่อย อ้วนไม่ชอบ ไม่พอใจ ทำอะไรกระทบความรู้สึกบ้างบางที
+      แต่เค้ารักอ้วนมากๆนะคับ อยากอยู่ด้วยไปนานๆเลยนะ อะไรที่ไม่ชอบ ทำแล้วอ้วนไม่พอใจ ก็เตือนเค้าด้วยนะ อย่าพึ่งตัดกันทิ้ง ไม่คุยกันนะอ้วน
+      รักอ้วนมากๆ นะคับ ขอบคุณที่ให้โอกาสเค้ามากกว่าคนอื่นนะคับอ้วน รักอ้วนนะคับ 🎀🎀
+    </p>
+    <img src="https://cdn.discordapp.com/attachments/1481655225361109084/1513962164849741974/IMG_20260608_073838.png?ex=6a29a2a4&is=6a285124&hm=2141e56b71e8db8c2925aba9bec019543582c11ebac7b1e2f09a4183e595a2e1&" />
+<audio id="bgm" src="40.mp3"></audio>
+<audio id="kissSound" src="kiss.mp3"></audio>
+
+    <button onclick="loveReply()">🎁 รักเธอที่สุด</button>
+    <p id="reply" style="margin-top:15px;font-size:18px;color:#ff5e78;display:none;"></p>
+  </div>
+</div>
+
+<script>
+  /* ===== เอฟเฟกต์ตอนกดรักเธอที่สุด ===== */
+  function loveReply() {
+    const reply = document.getElementById('reply');
+    reply.style.display = 'block';
+    reply.innerText = 'เค้าก็รักเบบี๋ที่สุดเลยยย 💖🥰';
+
+    bigFireworks();
+    startPhotoRain();
+  }
+
+  function startPhotoRain() {
+    const images = [
+      'https://cdn.discordapp.com/attachments/1481655225361109084/1513962164849741974/IMG_20260608_073838.png?ex=6a29a2a4&is=6a285124&hm=2141e56b71e8db8c2925aba9bec019543582c11ebac7b1e2f09a4183e595a2e1&',
+      'https://cdn.discordapp.com/attachments/1481655225361109084/1513962222076825630/IMG_20260606_133940_693.webp?ex=6a29a2b1&is=6a285131&hm=896801e130f3504161a5f2656f4ceafce08f2d8b6b2607af9ccc6631ed5d084c&',
+      'https://img1.pic.in.th/images/-7-1.png'
+    ];
+
+    for (let i = 0; i < 40; i++) {
+      const img = document.createElement('img');
+      img.src = images[Math.floor(Math.random() * images.length)];
+      img.style.position = 'fixed';
+      img.style.top = '-120px';
+      img.style.left = Math.random() * 100 + 'vw';
+      img.style.width = 60 + Math.random() * 40 + 'px';
+      img.style.borderRadius = '15px';
+      img.style.zIndex = 4;
+      img.style.animation = `fall ${3 + Math.random() * 3}s linear forwards`;
+      document.body.appendChild(img);
+      setTimeout(() => img.remove(), 7000);
+    }
+  }
+</script>
+
+
+<script>
+  /* ===== ตั้งค่าเองตรงนี้ ===== */
+  const loverName = "MHOO AUAN LOOKPAD";
+  const coupleDate = "06 มิถุนายน 2026";
+  const secretPassword = "14/05/2009";
+  const totalHeart = 16;
+
+  // init text
+  document.getElementById('name').innerText = loverName;
+  document.getElementById('name2').innerText = loverName;
+  document.getElementById('date').innerText = coupleDate;
+
+  let heartCount = 0;
+
+  function checkPassword() {
+    const input = document.getElementById('password').value;
+    if (input === secretPassword) {
+      document.getElementById('step0').classList.add('hidden');
+      document.getElementById('step1').classList.remove('hidden');
+
+      startFloating();
+      bigFireworks();
+
+      const bgm = document.getElementById('bgm');
+      if (bgm) {
+        bgm.currentTime = 0;
+        bgm.play().catch(() => {});
+      }
+    } else {
+      alert('รหัสไม่ถูกต้องนะ 😝');
+    }
+  }
+
+  function openEnvelope() {
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+    heartCount = 0;
+    document.getElementById('counter').innerText = heartCount + ' / ' + totalHeart;
+    document.getElementById('hearts').innerHTML = '';
+    spawnHeart();
+  }
+
+  function spawnHeart() {
+    const heart = document.createElement('span');
+    heart.innerText = '💗';
+    heart.className = 'heart';
+    heart.onclick = () => {
+      const kiss = document.getElementById('kissSound');
+      if (kiss) kiss.play().catch(() => {});
+
+      heart.remove();
+      heartCount++;
+      document.getElementById('counter').innerText = heartCount + ' / ' + totalHeart;
+
+      if (heartCount >= totalHeart) {
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.remove('hidden');
+        bigFireworks();
+      } else {
+        spawnHeart();
+      }
+    };
+    document.getElementById('hearts').appendChild(heart);
+  }
+
+  function startFloating() {
+    setInterval(() => {
+      const el = document.createElement('div');
+      el.className = 'float';
+      el.innerHTML = Math.random() > 0.5 ? '💖' : '❄️';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.fontSize = 16 + Math.random() * 20 + 'px';
+      el.style.animationDuration = 3 + Math.random() * 3 + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6000);
+    }, 400);
+  }
+
+  function bigFireworks() {
+    for (let i = 0; i < 40; i++) {
+      const fw = document.createElement('div');
+      fw.className = 'firework';
+      fw.style.left = Math.random() * 100 + 'vw';
+      fw.style.top = Math.random() * 100 + 'vh';
+      fw.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+      document.body.appendChild(fw);
+      setTimeout(() => fw.remove(), 1500);
+    }
+  }
+</script>
+
+</body>
+</html>
